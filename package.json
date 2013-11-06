@@ -1,0 +1,15 @@
+{
+        "schema_version": "1.0",
+        "name" : "mx_google_map",
+        "label": "MX Google Map",
+        "version": "1.5.3",
+        "types": ["fieldtype"],
+        "paths": {
+                "system": [
+                        "system/expressionengine/third_party/mx_google_map"
+                ],
+                "themes": [
+                        "themes/third_party/mx_google_map"
+                ]
+        }
+}

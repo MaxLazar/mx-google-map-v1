@@ -1,0 +1,58 @@
+a.minibutton {
+			display:inline-block;
+			height:25px;
+			padding:0 0 0 3px;
+			font-size:11px;
+			font-weight:bold;
+			color:#333;
+			text-shadow:1px 1px 0 #fff; 
+			background:url(../images/minibutton_matrix.png) 0 0 no-repeat;
+			white-space:nowrap;
+			border:none;
+			overflow:visible;
+			cursor:pointer;
+			text-decoration:none;
+			margin-bottom:1px;
+			
+		}
+		
+		a.minibutton>span {
+			display:block;
+			height:25px;
+			padding:0 10px 0 8px;
+			line-height:23px;
+			background:url(../images/minibutton_matrix.png) 100% 0 no-repeat;
+		}
+		
+		a.minibutton:hover {
+			color:#fff;
+			text-decoration:none;
+			text-shadow:-1px -1px 0 rgba(0,0,0,0.3);
+			background-position:0 -30px;
+		}
+		
+		a.minibutton:hover>span {background-position:100% -30px;}
+		a.minibutton.mousedown{background-position:0 -60px; }
+		a.minibutton.mousedown>span{background-position:100% -60px; }
+		
+		/* with icon */
+		a.btn-download .smallicon {
+			float:left;
+			margin-left:-4px;
+			width:18px;
+			height:22px;
+			background:url(../images/google_marker.png) 0 0 no-repeat;
+		}
+		
+		a.btn-download .smallicon {background-position:0px 2px;}
+		
+		a.btn-download:hover .smallicon {background-position: 0px -18px;}	
+		
+		.panel_button {background:url(../images/slider.png) 0 0 no-repeat;float:left;width:35px; height:60px;margin-top: 200px; top: -500px; z-index: 100;   position: relative;}
+		
+		.panel_main {width:240px;height: 500px;float:left;background-color:#fff; mergin-right:50px; opacity:0.8; top: -500px; z-index: 100;  position: relative; overflow:auto}
+		.panel_main_el {padding:10px;}
+		div.panel_main_el label {}
+		
+		.map_frame {height: 500px;border:1px solid #B6C0C2;overflow:hidden;}
+		.map_container {width: 100%; height: 500px; position: relative;zoom: 1;}
