@@ -13,7 +13,7 @@
  */
 class Mx_google_map_upd {
 		
-	var $version        = '1.5.3'; 
+	var $version        = '1.5.4'; 
 	var $module_name = "Mx_google_map";
 	
     function Mx_google_map_upd( $switch = TRUE ) 

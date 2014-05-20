@@ -14,7 +14,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 	var $info = array(
 		'name'  => 'MX Google Maps',
-		'version' => '1.5.3'
+		'version' => '1.5.4'
 	);
 
 	var $addon_name = 'mx_google_map';
@@ -123,9 +123,9 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 		if (!isset($this->cache[$this->addon_name]['header']))
 		{
-			$this->EE->cp->add_to_head('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
+			$this->EE->cp->add_to_foot('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
 			$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$this->EE->config->item('theme_folder_url').'third_party/mx_google_map/mxgooglemap.min.js"></script>');
-			$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.$this->EE->config->item('theme_folder_url').'third_party/mx_google_map/css/mx_google_map.css" />');
+			$this->EE->cp->add_to_foot('<link rel="stylesheet" type="text/css" href="'.$this->EE->config->item('theme_folder_url').'third_party/mx_google_map/css/mx_google_map.css" />');
 			$this->_insert_js('
 			marker_icons_path = "'.$url_markers_icons.'";');
 			$this->cache[$this->addon_name]['header'] = TRUE;
