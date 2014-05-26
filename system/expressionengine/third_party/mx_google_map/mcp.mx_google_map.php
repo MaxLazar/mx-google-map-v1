@@ -189,11 +189,12 @@ class Mx_google_map_mcp
 		$vars['_form_base'] = $this->form_base;
 
 		if ( version_compare( APP_VER, '2.6.0', '<' ) ) {
-			ee()->cp->set_variable( $key, $val );
+			ee()->cp->set_variable('cp_page_title', lang($lang_key));
 		}
 		else {
 			ee()->view->$key = $val;
 		}
+
 
 		ee()->cp->set_breadcrumb($this->base, lang('mx_google_map_module_name'));
 		
