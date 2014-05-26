@@ -1,4 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+require_once PATH_THIRD . 'mx_google_map/config.php';
+
+
 /**
  *  MX Google Map Class for ExpressionEngine2
  *
@@ -13,8 +17,8 @@
 class Mx_google_map_ft extends EE_Fieldtype {
 
 	var $info = array(
-		'name'  => 'MX Google Maps',
-		'version' => '1.5.4'
+		'name'  => MX_GOOGLE_MAP_NAME,
+		'version' => MX_GOOGLE_MAP_VERSION
 	);
 
 	var $addon_name = 'mx_google_map';
@@ -27,7 +31,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		parent::__construct();
 
 		if(defined('SITE_ID') == FALSE)
-		define('SITE_ID', $this->EE->config->item('site_id'));
+		define('SITE_ID', ee()->config->item('site_id'));
 	}
 
 
@@ -56,7 +60,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			}
 		}
 
-		if (isset($this->EE->session->cache['ep_better_workflow']['is_draft']) && $this->EE->session->cache['ep_better_workflow']['is_draft'])
+		if (isset(ee()->session->cache['ep_better_workflow']['is_draft']) && ee()->session->cache['ep_better_workflow']['is_draft'])
 		{
 			if(is_array($data))
 			{
@@ -79,11 +83,11 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 		$custom_fields_js = '';
 
-		$this->EE->lang->loadfile('mx_google_map');
+		ee()->lang->loadfile('mx_google_map');
 
 		$data_points = array('latitude', 'longitude', 'zoom');
 
-		$entry_id = $this->EE->input->get('entry_id');
+		$entry_id = ee()->input->get('entry_id');
 
 		$this->settings = array_merge($this->settings, unserialize(base64_decode($this->settings['field_settings'])));
 
@@ -104,7 +108,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 		$slide_bar = (isset($this->settings['slide_bar'])) ? (($this->settings['slide_bar'] != "y" && $this->settings['slide_bar'] != "o") ?  false : true) : true;
 
-		$custom_fields = $this->EE->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID))->result_array();
+		$custom_fields = ee()->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID))->result_array();
 
 		$marker_template = "";
 		foreach ($custom_fields as $row)
@@ -117,28 +121,28 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		$options = compact($data_points);
 		$out = '';
 
-		$url_markers_icons = ($this->EE->config->item('mx_markers_url')) ? $this->EE->config->item('mx_markers_url') : reduce_double_slashes($this->EE->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/');
-		$path_markers_icons = ($this->EE->config->item('mx_markers_path')) ? $this->EE->config->item('mx_markers_path') : reduce_double_slashes($this->EE->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/');
+		$url_markers_icons = (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/');
+		$path_markers_icons = (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/');
 
 
 		if (!isset($this->cache[$this->addon_name]['header']))
 		{
-			$this->EE->cp->add_to_foot('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
-			$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$this->EE->config->item('theme_folder_url').'third_party/mx_google_map/mxgooglemap.min.js"></script>');
-			$this->EE->cp->add_to_foot('<link rel="stylesheet" type="text/css" href="'.$this->EE->config->item('theme_folder_url').'third_party/mx_google_map/css/mx_google_map.css" />');
+			ee()->cp->add_to_foot('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
+			ee()->cp->add_to_foot('<script type="text/javascript" src="'.ee()->config->item('theme_folder_url').'third_party/mx_google_map/mxgooglemap.min.js"></script>');
+			ee()->cp->add_to_foot('<link rel="stylesheet" type="text/css" href="'.ee()->config->item('theme_folder_url').'third_party/mx_google_map/css/mx_google_map.css" />');
 			$this->_insert_js('
 			marker_icons_path = "'.$url_markers_icons.'";');
 			$this->cache[$this->addon_name]['header'] = TRUE;
 		}
 
-		$entry_id = $this->EE->input->get('entry_id');
+		$entry_id = ee()->input->get('entry_id');
 
 		$markers = '';
 
 
 		if ($entry_id && !$is_draft)
 		{
-			$query = $this->EE->db->get_where('exp_mx_google_map', array('entry_id' => $entry_id, 'field_id' => $this->field_id))->result_array();
+			$query = ee()->db->get_where('exp_mx_google_map', array('entry_id' => $entry_id, 'field_id' => $this->field_id))->result_array();
 		};
 
 		if ($query) {
@@ -151,7 +155,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 									,longitude: '.$row['longitude'].'
 									,draggable: true
 									,icon: "'.(($row['icon'] != "") ?  $row['icon'] : $default_icon).'"
-									'. $this->EE->functions->var_swap($marker_template, $row).'},';
+									'. ee()->functions->var_swap($marker_template, $row).'},';
 			}
 
 			$markers = rtrim($markers, ',');
@@ -198,15 +202,15 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 		$field = ' <div style="padding: 0 0;line-height:10px;">
 
-		'.$this->EE->lang->line('f_tip').'<br/>
+		'.ee()->lang->line('f_tip').'<br/>
 		<!--class="geo_input" -->
 		<input type="text" id="'.$this->field_name.'_address" style="width:200px;" />';
 
 		$button = '
 		<a href="javascript:;" class="minibutton '.$this->field_name.'_btn_geocode">
-		<span><span class="smallicon2"></span>'.((true) ? $this->EE->lang->line('find_it') : ' ').'</span></a>
+		<span><span class="smallicon2"></span>'.((true) ? ee()->lang->line('find_it') : ' ').'</span></a>
 		<a  href="javascript:;" class="minibutton btn-download saef '.$this->field_name.'_btn_addmarker">
-		<span><span class="smallicon"></span>'.((true) ? $this->EE->lang->line('marker_at_c') : '').'</span></a>
+		<span><span class="smallicon"></span>'.((true) ? ee()->lang->line('marker_at_c') : '').'</span></a>
 		</div>
 		<div style="clear:both; padding:0; margin:0;"></div>';
 
@@ -220,17 +224,17 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 
 					</div>
-					<label  for="gmap-icon">'.$this->EE->lang->line('icon').'</label>
+					<label  for="gmap-icon">'.ee()->lang->line('icon').'</label>
 					'.$this->_get_dir_list($path_markers_icons, $this->field_name,'').'
-					<label  for="latitude">'.$this->EE->lang->line('latitude').'</label>
+					<label  for="latitude">'.ee()->lang->line('latitude').'</label>
 					<input autocomplete="off" spellcheck="false" id="latitude_'.$this->field_name.'" name="latitude_'.$this->field_name.'"  disabled="disabled" type="text">
-					<label  for="longitude">'.$this->EE->lang->line('longitude').'</label>
+					<label  for="longitude">'.ee()->lang->line('longitude').'</label>
 					<input autocomplete="off" spellcheck="false" id="longitude_'.$this->field_name.'" name="longitude_'.$this->field_name.'" disabled="disabled" type="text">
 
 					<div style="width:100%;padding-top:20px;">
-					<a href="javascript:;" class="minibutton '.$this->field_name.'_btn_delete" rel="'.$this->field_name.'"><span>'.$this->EE->lang->line('delete').'</span></a>
-					<a href="javascript:;" class="minibutton '.$this->field_name.'_btn_move" rel="'.$this->field_name.'"><span>'.$this->EE->lang->line('move2center').'</span></a>
-					<span style="float:right;"> <a href="javascript:;" class="minibutton '.$this->field_name.'_btn_apply" rel="'.$this->field_name.'"><span>'.$this->EE->lang->line('apply').'</span></a></span>
+					<a href="javascript:;" class="minibutton '.$this->field_name.'_btn_delete" rel="'.$this->field_name.'"><span>'.ee()->lang->line('delete').'</span></a>
+					<a href="javascript:;" class="minibutton '.$this->field_name.'_btn_move" rel="'.$this->field_name.'"><span>'.ee()->lang->line('move2center').'</span></a>
+					<span style="float:right;"> <a href="javascript:;" class="minibutton '.$this->field_name.'_btn_apply" rel="'.$this->field_name.'"><span>'.ee()->lang->line('apply').'</span></a></span>
 					</div>
 				</div>
 			</div>
@@ -290,12 +294,12 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		$map = array ();
 
 		// BWF - Is this draft data we're loading into the template parser?
-		if(isset($this->EE->session->cache['ep_better_workflow']['is_draft']) && $this->EE->session->cache['ep_better_workflow']['is_draft'])
+		if(isset(ee()->session->cache['ep_better_workflow']['is_draft']) && ee()->session->cache['ep_better_workflow']['is_draft'])
 		{
 			// BWF - If so make sure we have an array, then update some variables
 			if(is_array($data))
 			{
-				$this->EE->session->cache['ep_better_workflow']['mx_google_map_draft_data'] = $data;
+				ee()->session->cache['ep_better_workflow']['mx_google_map_draft_data'] = $data;
 				$data = $data['field_data'];
 			}
 		}
@@ -327,9 +331,9 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			$query = false;
 
 			// BWF - Is this draft data we're loading into the publish form?
-			if(isset($this->EE->session->cache['ep_better_workflow']['is_draft']) && $this->EE->session->cache['ep_better_workflow']['is_draft'])
+			if(isset(ee()->session->cache['ep_better_workflow']['is_draft']) && ee()->session->cache['ep_better_workflow']['is_draft'])
 			{
-				$draft_data = $this->EE->session->cache['ep_better_workflow']['mx_google_map_draft_data'];
+				$draft_data = ee()->session->cache['ep_better_workflow']['mx_google_map_draft_data'];
 				if (isset($draft_data['order']))
 				{
 					foreach ($draft_data['order'] as $k => $v)
@@ -350,7 +354,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 					$data_q['point_id'] = $this->row['point_id'];
 				}
 
-				$query = $this->EE->db->get_where('exp_mx_google_map', $data_q);
+				$query = ee()->db->get_where('exp_mx_google_map', $data_q);
 				$query = ($query->num_rows() > 0) ? $query->result_array() : false;
 
 			}
@@ -366,8 +370,8 @@ class Mx_google_map_ft extends EE_Fieldtype {
 				{
 					$pass = false;
 
-					if (isset($this->EE->TMPL->tagparams['points'])) {
-						if (!isset($this->EE->TMPL->tagparams['points'][$row['point_id']])){
+					if (isset(ee()->TMPL->tagparams['points'])) {
+						if (!isset(ee()->TMPL->tagparams['points'][$row['point_id']])){
 							continue;
 						}
 						else {
@@ -378,15 +382,15 @@ class Mx_google_map_ft extends EE_Fieldtype {
 					$markers[$i] = $row;
 
 					if ($pass) {
-						$markers[$i]['distance'] = $this->EE->TMPL->tagparams['points'][$row['point_id']];
+						$markers[$i]['distance'] = ee()->TMPL->tagparams['points'][$row['point_id']];
 					}
 
 					$i++;
 				}
 
 				if (!empty($markers)) {
-					$tagdata = $this->EE->functions->prep_conditionals($tagdata, $markers);
-					$r = $this->EE->TMPL->parse_variables($tagdata, $markers);
+					$tagdata = ee()->functions->prep_conditionals($tagdata, $markers);
+					$r = ee()->TMPL->parse_variables($tagdata, $markers);
 				}
 			}
 		}
@@ -436,13 +440,13 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			$navigationControl =  ( ! isset($params['navigationControl'])) ? "\n,navigationControl: true" : "\n,navigationControl:".$params['navigationControl'];
 			$scaleControl =  ( ! isset($params['scaleControl'])) ? "\n,scaleControl: true" : "\n,scaleControl:".$params['scaleControl'];
 			$mapTypeControl =  ( ! isset($params['mapTypeControl'])) ? "\n,mapTypeControl: true" : "\n,mapTypeControl:".$params['mapTypeControl'];
-			$url_markers_icons = ($this->EE->config->item('mx_markers_url')) ? $this->EE->config->item('mx_markers_url') : reduce_double_slashes($this->EE->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/');
+			$url_markers_icons = (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/');
 
 			$cache_js =  ( ! isset($params['cache_js'])) ? false : $params['cache_js'];
 
 			$randid = rand();
 
-			$custom_fields = $this->EE->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID))->result_array();
+			$custom_fields = ee()->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID))->result_array();
 
 			$marker_template = "";
 
@@ -452,19 +456,19 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			';
 			}
 
-			$query = $this->EE->db->get_where('exp_mx_google_map', array('entry_id' => $this->row['entry_id'], 'field_id' => $this->field_id))->result_array();
+			$query = ee()->db->get_where('exp_mx_google_map', array('entry_id' => $this->row['entry_id'], 'field_id' => $this->field_id))->result_array();
 			$markers = '';
 
 			foreach ($query as $row)
 			{
-				if (isset($this->EE->TMPL->tagparams['points'])) {
-					if (!in_array($row['point_id'], $this->EE->TMPL->tagparams['points']))
+				if (isset(ee()->TMPL->tagparams['points'])) {
+					if (!in_array($row['point_id'], ee()->TMPL->tagparams['points']))
 						return false;
 				}
 
 				$markers .= '{'.'marker_id : '.$row['point_id'].'
 
-						'. $this->EE->functions->var_swap($marker_template, $row).'
+						'. ee()->functions->var_swap($marker_template, $row).'
 
 						,latitude: 	'.$row['latitude'].',
 						longitude: '.$row['longitude'].',
@@ -508,11 +512,11 @@ class Mx_google_map_ft extends EE_Fieldtype {
 						'</script>';
 
 			} else {
-					if(!isset($this->EE->session->cache['mx_google_map_js'])) {
-						$this->EE->session->cache['mx_google_map_js'] = '';
+					if(!isset(ee()->session->cache['mx_google_map_js'])) {
+						ee()->session->cache['mx_google_map_js'] = '';
 					}
 					
-					$this->EE->session->cache['mx_google_map_js'] .= $js;
+					ee()->session->cache['mx_google_map_js'] .= $js;
 			}
 
 
@@ -548,7 +552,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 	function display_settings($data)
 	{
 
-		$this->EE->lang->loadfile('mx_google_map');
+		ee()->lang->loadfile('mx_google_map');
 
 		$latitude  = isset($data['latitude']) ? $data['latitude'] : $this->settings['latitude'];
 		$longitude = isset($data['longitude']) ? $data['longitude'] : $this->settings['longitude'];
@@ -557,38 +561,38 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		$icon = isset($data['icon']) ? $data['icon'] : $this->settings['icon'];
 		$slide_bar = isset($data['slide_bar']) ? $data['slide_bar'] : $this->settings['slide_bar'];
 
-		$path_markers_icons = ($this->EE->config->item('mx_markers_path')) ? $this->EE->config->item('mx_markers_path') : reduce_double_slashes($this->EE->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/');
+		$path_markers_icons = (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/');
 
 
 	
 
-		$this->EE->table->add_row(
+		ee()->table->add_row(
 			lang('latitude', 'latitude'),
 			form_input('latitude', $latitude)
 		);
 
-		$this->EE->table->add_row(
+		ee()->table->add_row(
 			lang('longitude', 'longitude'),
 			form_input('longitude', $longitude)
 		);
 
-		$this->EE->table->add_row(
+		ee()->table->add_row(
 			lang('zoom', 'zoom'),
 			form_dropdown('zoom', range(1, 20), $zoom)
 		);
 
 
-		$this->EE->table->add_row(
+		ee()->table->add_row(
 			lang('max_points', 'max_points'),
 			form_input('max_points', $max_points)
 		);
 
-		$this->EE->table->add_row(
+		ee()->table->add_row(
 			lang('icon', 'icon'),
 			$this->_get_dir_list($path_markers_icons, '', $icon)
 		);
 
-		$this->EE->table->add_row(
+		ee()->table->add_row(
 			lang('slide_bar', 'slide_bar'),
 			form_dropdown('slide_bar', array('y' => lang('yes_close'),  'o' => lang('yes_open'),  'n' => lang('no')), $slide_bar)
 
@@ -599,13 +603,13 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		{
 			// Map preview
 			$this->_cp_js();
-			$this->EE->javascript->output('$(window).load(gmaps);');
+			ee()->javascript->output('$(window).load(gmaps);');
 			$this->cache[$this->addon_name]['header_map'] = TRUE;
 		}
 
 
 
-		$this->EE->table->add_row(
+		ee()->table->add_row(
 			lang('preview', 'preview'),
 			'<div style="height: 300px;"><div id="map_canvas" style="width: 100%; height: 100%"></div></div>'
 		);
@@ -621,12 +625,12 @@ class Mx_google_map_ft extends EE_Fieldtype {
 	function save_settings($data)
 	{
 		return array(
-			'latitude' => $this->EE->input->post('latitude'),
-			'longitude' => $this->EE->input->post('longitude'),
-			'zoom'  => $this->EE->input->post('zoom'),
-			'max_points'  => $this->EE->input->post('max_points'),
-			'icon'  => $this->EE->input->post('gmap-icon'),
-			'slide_bar'  => $this->EE->input->post('slide_bar')
+			'latitude' => ee()->input->post('latitude'),
+			'longitude' => ee()->input->post('longitude'),
+			'zoom'  => ee()->input->post('zoom'),
+			'max_points'  => ee()->input->post('max_points'),
+			'icon'  => ee()->input->post('gmap-icon'),
+			'slide_bar'  => ee()->input->post('slide_bar')
 		);
 
 	}
@@ -638,7 +642,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		$r = array();
 
 		if (isset($data['order'])) {
-			$this->cache[$this->addon_name]['custom_fields'] = $this->EE->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID))->result_array();
+			$this->cache[$this->addon_name]['custom_fields'] = ee()->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID))->result_array();
 
 
 
@@ -718,17 +722,17 @@ class Mx_google_map_ft extends EE_Fieldtype {
 	{
 
 		$id = $this->settings['entry_id'];
-		$this->EE->db->where('entry_id', $id);
+		ee()->db->where('entry_id', $id);
 
 		if ($data != ""){
-			$this->EE->db->update('exp_channel_data', array('field_id_'.$this->settings['field_id'] => $data));
+			ee()->db->update('exp_channel_data', array('field_id_'.$this->settings['field_id'] => $data));
 		}
 
 		if  (!isset($this->cache[$this->addon_name]['entry_id']))  {
 
 			if (!isset($this->cache[$this->addon_name]['sql_request'])) {
 
-				$query = $this->EE->db->get_where('exp_mx_google_map', array('entry_id' => $this->settings['entry_id']))->result_array();
+				$query = ee()->db->get_where('exp_mx_google_map', array('entry_id' => $this->settings['entry_id']))->result_array();
 
 				$this->cache[$this->addon_name]['sql_request'] = array();
 
@@ -736,7 +740,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 					$this->cache[$this->addon_name]['sql_request'][] = $row['point_id'];
 				}
 
-				$this->EE->db->query('DELETE FROM  exp_mx_google_map WHERE entry_id = '.$id.'');
+				ee()->db->query('DELETE FROM  exp_mx_google_map WHERE entry_id = '.$id.'');
 
 			}
 
@@ -753,7 +757,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 				$point ['entry_id'] = $this->settings['entry_id'];
 				$point ['field_id'] = $this->field_id;
 
-				$this->EE->db->query($this->EE->db->insert_string('exp_mx_google_map', $point));
+				ee()->db->query(ee()->db->insert_string('exp_mx_google_map', $point));
 
 			}
 
@@ -776,7 +780,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 	function install()
 	{
 
-		$this->EE->db->query("CREATE TABLE  IF NOT EXISTS  exp_mx_google_map (
+		ee()->db->query("CREATE TABLE  IF NOT EXISTS  exp_mx_google_map (
 							  `point_id` int(10) unsigned NOT NULL auto_increment,
 							  `entry_id`     varchar(10)             NOT NULL default '',
 							  `latitude`        varchar(50)      NOT NULL default '',
@@ -801,14 +805,14 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			'max_points' => '3',
 			'icon' => '',
 			'slide_bar' => 'y',
-			'path_markers_icons' => ($this->EE->config->item('mx_markers_path')) ? $this->EE->config->item('mx_markers_path') : reduce_double_slashes($this->EE->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/'),
-			'url_markers_icons' => ($this->EE->config->item('mx_markers_url')) ? $this->EE->config->item('mx_markers_url') : reduce_double_slashes($this->EE->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/')
+			'path_markers_icons' => (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/'),
+			'url_markers_icons' => (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/')
 		);
 	}
 
 	private function _insert_js($js)
 	{
-		$this->EE->cp->add_to_foot('<script type="text/javascript">'.$js.'</script>');
+		ee()->cp->add_to_foot('<script type="text/javascript">'.$js.'</script>');
 	}
 
 	// --------------------------------------------------------------------
@@ -819,15 +823,15 @@ class Mx_google_map_ft extends EE_Fieldtype {
 	 */
 	function uninstall()
 	{
-		$this->EE->db->query("DROP TABLE exp_mx_google_map");
+		ee()->db->query("DROP TABLE exp_mx_google_map");
 
 		return TRUE;
 	}
 
 	function delete($entry_ids)
 	{
-		$this->EE->db->where_in('entry_id', $entry_ids);
-		$this->EE->db->delete('exp_mx_google_map');
+		ee()->db->where_in('entry_id', $entry_ids);
+		ee()->db->delete('exp_mx_google_map');
 	}
 
 	// --------------------------------------------------------------------
@@ -844,9 +848,9 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		// This js is used on the global and regular settings
 		// pages, but on the global screen the map takes up almost
 		// the entire screen. So scroll wheel zooming becomes a hindrance.
-		$this->EE->javascript->set_global('gmaps.scroll', ($_GET['C'] == 'content_admin'));
-		$this->EE->cp->add_to_head('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
-		$this->EE->cp->load_package_js('cp');
+		ee()->javascript->set_global('gmaps.scroll', ($_GET['C'] == 'content_admin'));
+		ee()->cp->add_to_foot('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
+		ee()->cp->load_package_js('cp');
 	}
 }
 

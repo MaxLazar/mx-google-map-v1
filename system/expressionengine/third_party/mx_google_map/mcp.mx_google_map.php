@@ -1,5 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+require_once PATH_THIRD . 'mx_google_map/config.php';
+
 /**
  * Google Map 
  *
@@ -22,15 +25,11 @@ class Mx_google_map_mcp
 	
 	function Mx_google_map_mcp( $switch = TRUE )
 	{
-		// Make a local reference to the ExpressionEngine super object
-		$this->EE =& get_instance(); 
-		
-
 		
 		if(defined('SITE_ID') == FALSE)
-			define('SITE_ID', $this->EE->config->item('site_id'));
+			define('SITE_ID', ee()->config->item('site_id'));
 			
-		$this->EE->load->dbforge();
+		ee()->load->dbforge();
 		$this->base	 	 = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->module_name;
 		$this->form_base = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->module_name;
 
@@ -54,9 +53,9 @@ class Mx_google_map_mcp
 			'language_packs' => ''
 		);
 		
-		$this->EE->db->select('field_name');
+		ee()->db->select('field_name');
 		
-		$query =  $this->EE->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID));
+		$query =  ee()->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID));
 
 		if ($query->num_rows() != 0)
 		{
@@ -118,11 +117,11 @@ class Mx_google_map_mcp
 								$errors[] = "duplicate_field_name";	
 							}
 							else {
-								$this->EE->db->insert('exp_mx_google_map_fields', $data); 
-								$data['field_id'] = $this->EE->db->insert_id();
+								ee()->db->insert('exp_mx_google_map_fields', $data); 
+								$data['field_id'] = ee()->db->insert_id();
 								array_push ($names, $data['field_name']);
 								$fields = array($data['field_name']	 => array('type' => 'TEXT'));
-								$this->EE->dbforge->add_column('mx_google_map', $fields);
+								ee()->dbforge->add_column('mx_google_map', $fields);
 								$vars['message'] = "saved";	
 							}
 					
@@ -130,8 +129,8 @@ class Mx_google_map_mcp
 						else
 						{
 							if (isset($_POST['delete_'.$field_id]))	{ 
-								$this->EE->db->delete('exp_mx_google_map_fields', array('field_id' => $field_id));
-								$this->EE->dbforge->drop_column('mx_google_map', strtolower($_POST['old_field_name_'.$field_id]));
+								ee()->db->delete('exp_mx_google_map_fields', array('field_id' => $field_id));
+								ee()->dbforge->drop_column('mx_google_map', strtolower($_POST['old_field_name_'.$field_id]));
 								$vars['message'] = "delete";	
 							}
 							else
@@ -144,11 +143,11 @@ class Mx_google_map_mcp
 															 'type' => 'TEXT',
 															),
 													);
-									$this->EE->dbforge->modify_column('mx_google_map', $fields);
+									ee()->dbforge->modify_column('mx_google_map', $fields);
 								}
 								
-								$this->EE->db->where('field_id', $field_id);
-								$this->EE->db->update('exp_mx_google_map_fields', $data); 
+								ee()->db->where('field_id', $field_id);
+								ee()->db->update('exp_mx_google_map_fields', $data); 
 								
 							}
 						}
@@ -158,8 +157,8 @@ class Mx_google_map_mcp
 			};
 		}
 		
-		$this->EE->db->order_by('field_id');
-		$query =  $this->EE->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID));
+		ee()->db->order_by('field_id');
+		$query =  ee()->db->get_where('exp_mx_google_map_fields', array('site_id' => SITE_ID));
 		
 		
 		if ($query->num_rows() != 0)
@@ -175,7 +174,7 @@ class Mx_google_map_mcp
 		
 		
 		$vars['errors'] = $errors;
-		$vars['img_path'] = $this->EE->config->item('theme_folder_url');
+		$vars['img_path'] = ee()->config->item('theme_folder_url');
 		$vars['settings'] = $settings;
 		$vars['settings_form'] = TRUE;		
 		
@@ -188,13 +187,22 @@ class Mx_google_map_mcp
 		$vars['content_view'] = $content_view;
 		$vars['_base'] = $this->base;
 		$vars['_form_base'] = $this->form_base;
-		$this->EE->cp->set_variable('cp_page_title', lang($lang_key));
-		$this->EE->cp->set_breadcrumb($this->base, lang('mx_google_map_module_name'));
+
+		if ( version_compare( APP_VER, '2.6.0', '<' ) ) {
+			ee()->cp->set_variable( $key, $val );
+		}
+		else {
+			ee()->view->$key = $val;
+		}
+
+
+		ee()->cp->set_variable('cp_page_title', lang($lang_key));
+		ee()->cp->set_breadcrumb($this->base, lang('mx_google_map_module_name'));
 		
 
 		
 		
-		return $this->EE->load->view('_wrapper', $vars, TRUE);
+		return ee()->load->view('_wrapper', $vars, TRUE);
 	}
 	
 }
