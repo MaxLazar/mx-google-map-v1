@@ -195,8 +195,6 @@ class Mx_google_map_mcp
 			ee()->view->$key = $val;
 		}
 
-
-		ee()->cp->set_variable('cp_page_title', lang($lang_key));
 		ee()->cp->set_breadcrumb($this->base, lang('mx_google_map_module_name'));
 		
 
