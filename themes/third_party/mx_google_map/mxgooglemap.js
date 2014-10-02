@@ -427,7 +427,6 @@ $.mxgoogleMaps =
     defaults: {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         zoom: 8,
-        setDraggable: true,
         navigationControl: true,
         scaleControl: true,
         mapTypeControl: true,
