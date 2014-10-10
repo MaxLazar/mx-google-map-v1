@@ -2,7 +2,7 @@
     "schema_version": "1.0",
     "name": "mx_google_map",
     "label": "MX Google Map",
-    "version": "1.5.3.140526",
+    "version": "1.5.3.141002",
     "types": ["fieldtype"],
     "paths": {
         "system": [
