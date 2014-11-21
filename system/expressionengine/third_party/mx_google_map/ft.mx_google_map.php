@@ -200,9 +200,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 		$value = implode('|', array_values($options));
 
-		$field = ' <div style="padding: 0 0;line-height:10px;">
-
-		'.ee()->lang->line('f_tip').'<br/>
+		$field = '<div class="top"><div class="tip">'.ee()->lang->line('f_tip').'</div><div class="geo_input">
 		<!--class="geo_input" -->
 		<input type="text" id="'.$this->field_name.'_address" style="width:200px;" />';
 
@@ -211,6 +209,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		<span><span class="smallicon2"></span>'.((true) ? ee()->lang->line('find_it') : ' ').'</span></a>
 		<a  href="javascript:;" class="minibutton btn-download saef '.$this->field_name.'_btn_addmarker">
 		<span><span class="smallicon"></span>'.((true) ? ee()->lang->line('marker_at_c') : '').'</span></a>
+		</div>
 		</div>
 		<div style="clear:both; padding:0; margin:0;"></div>';
 
