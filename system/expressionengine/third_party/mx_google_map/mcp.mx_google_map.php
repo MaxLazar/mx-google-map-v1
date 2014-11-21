@@ -174,7 +174,7 @@ class Mx_google_map_mcp
 
 
 		$vars['errors'] = $errors;
-		$vars['img_path'] = ee()->config->item('theme_folder_url');
+		$vars['img_path'] = ee()->config->item('url_third_themes');
 		$vars['settings'] = $settings;
 		$vars['settings_form'] = TRUE;
 
