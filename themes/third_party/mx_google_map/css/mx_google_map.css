@@ -54,5 +54,8 @@ a.minibutton {
 		.panel_main_el {padding:10px;}
 		div.panel_main_el label {}
 		
-		.map_frame {height: 500px;border:1px solid #B6C0C2;overflow:hidden;}
+		.map_frame {height: 500px;border:1px solid #B6C0C2;overflow:hidden;margin-top:5px}
 		.map_container {width: 100%; height: 500px; position: relative;zoom: 1;}
+		.top {margin-top:11px;}
+		.tip {line-height:10px;}
+		.geo_input {margin-top:5px;}
