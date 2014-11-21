@@ -121,15 +121,15 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		$options = compact($data_points);
 		$out = '';
 
-		$url_markers_icons = (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/');
-		$path_markers_icons = (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/');
+		$url_markers_icons = (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('url_third_themes').'/mx_google_map/maps-icons/');
+		$path_markers_icons = (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('path_third_themes').'/mx_google_map/maps-icons/');
 
 
 		if (!isset($this->cache[$this->addon_name]['header']))
 		{
 			ee()->cp->add_to_foot('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
-			ee()->cp->add_to_foot('<script type="text/javascript" src="'.ee()->config->item('theme_folder_url').'third_party/mx_google_map/mxgooglemap.min.js"></script>');
-			ee()->cp->add_to_foot('<link rel="stylesheet" type="text/css" href="'.ee()->config->item('theme_folder_url').'third_party/mx_google_map/css/mx_google_map.css" />');
+			ee()->cp->add_to_foot('<script type="text/javascript" src="'.ee()->config->item('url_third_themes').'mx_google_map/mxgooglemap.min.js"></script>');
+			ee()->cp->add_to_foot('<link rel="stylesheet" type="text/css" href="'.ee()->config->item('url_third_themes').'mx_google_map/css/mx_google_map.css" />');
 			$this->_insert_js('
 			marker_icons_path = "'.$url_markers_icons.'";');
 			$this->cache[$this->addon_name]['header'] = TRUE;
@@ -440,7 +440,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			$navigationControl =  ( ! isset($params['navigationControl'])) ? "\n,navigationControl: true" : "\n,navigationControl:".$params['navigationControl'];
 			$scaleControl =  ( ! isset($params['scaleControl'])) ? "\n,scaleControl: true" : "\n,scaleControl:".$params['scaleControl'];
 			$mapTypeControl =  ( ! isset($params['mapTypeControl'])) ? "\n,mapTypeControl: true" : "\n,mapTypeControl:".$params['mapTypeControl'];
-			$url_markers_icons = (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/');
+			$url_markers_icons = (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('url_third_themes').'/mx_google_map/maps-icons/');
 
 			$cache_js =  ( ! isset($params['cache_js'])) ? false : $params['cache_js'];
 
@@ -561,7 +561,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		$icon = isset($data['icon']) ? $data['icon'] : $this->settings['icon'];
 		$slide_bar = isset($data['slide_bar']) ? $data['slide_bar'] : $this->settings['slide_bar'];
 
-		$path_markers_icons = (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/');
+		$path_markers_icons = (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('path_third_themes').'/mx_google_map/maps-icons/');
 
 
 	
@@ -805,8 +805,8 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			'max_points' => '3',
 			'icon' => '',
 			'slide_bar' => 'y',
-			'path_markers_icons' => (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('theme_folder_path').'/third_party/mx_google_map/maps-icons/'),
-			'url_markers_icons' => (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('theme_folder_url').'/third_party/mx_google_map/maps-icons/')
+			'path_markers_icons' => (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('path_third_themes').'/mx_google_map/maps-icons/'),
+			'url_markers_icons' => (ee()->config->item('mx_markers_url')) ? ee()->config->item('mx_markers_url') : reduce_double_slashes(ee()->config->item('url_third_themes').'/mx_google_map/maps-icons/')
 		);
 	}
 
