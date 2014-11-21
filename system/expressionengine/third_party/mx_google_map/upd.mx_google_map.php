@@ -54,7 +54,6 @@ class Mx_google_map_upd {
 
 		foreach ( $default_fields as  $key => $value ) {
 			$data = array(
-				'field_id' => '',
 				'field_name' => strtolower( $key ),
 				'field_label' => $value,
 				'site_id'  => SITE_ID
