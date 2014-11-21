@@ -30,6 +30,11 @@ class Mx_google_map_ft extends EE_Fieldtype {
 	{
 		parent::__construct();
 
+		if (!ee()->config->item('path_third_themes')) {
+			ee()->config->config['path_third_themes'] = ee()->config->item('theme_folder_path').'/third_party/';
+			ee()->config->config['url_third_themes']  = ee()->config->item('theme_folder_url').'/third_party/';
+		}
+
 		if(defined('SITE_ID') == FALSE)
 		define('SITE_ID', ee()->config->item('site_id'));
 	}
@@ -506,16 +511,16 @@ class Mx_google_map_ft extends EE_Fieldtype {
 			';
 
 			if (!$cache_js) {
-			
+
 				$ret .= '<script type="text/javascript">'
-						. $js . 	
+						. $js .
 						'</script>';
 
 			} else {
 					if(!isset(ee()->session->cache['mx_google_map_js'])) {
 						ee()->session->cache['mx_google_map_js'] = '';
 					}
-					
+
 					ee()->session->cache['mx_google_map_js'] .= $js;
 			}
 
@@ -564,7 +569,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		$path_markers_icons = (ee()->config->item('mx_markers_path')) ? ee()->config->item('mx_markers_path') : reduce_double_slashes(ee()->config->item('path_third_themes').'/mx_google_map/maps-icons/');
 
 
-	
+
 
 		ee()->table->add_row(
 			lang('latitude', 'latitude'),
