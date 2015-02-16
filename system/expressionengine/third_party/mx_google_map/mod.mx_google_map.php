@@ -398,7 +398,7 @@ class Mx_google_map {
 
     function GetLatLong( $query, $mode ) {
 
-        $query = str_replace( " ", "+", trim( $query ) );
+        $query = urlencode(trim($query));
         $xml_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".$query."&ie=utf-8&oe=utf-8&sensor=false";
 
         if ( !$out = $this->_readCache( md5( $query ) ) ) {
