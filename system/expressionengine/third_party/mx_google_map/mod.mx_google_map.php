@@ -399,7 +399,7 @@ class Mx_google_map {
     function GetLatLong( $query, $mode ) {
 
         $query = str_replace( " ", "+", trim( $query ) );
-        $xml_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".$query."&ie=utf-8&oe=utf-8&sensor=false";
+        $xml_url = "//maps.googleapis.com/maps/api/geocode/xml?address=".$query."&ie=utf-8&oe=utf-8&sensor=false";
 
         if ( !$out = $this->_readCache( md5( $query ) ) ) {
             if ( ini_get( 'allow_url_fopen' ) ) {
