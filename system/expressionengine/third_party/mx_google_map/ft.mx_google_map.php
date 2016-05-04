@@ -132,7 +132,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 
 		if (!isset($this->cache[$this->addon_name]['header']))
 		{
-			ee()->cp->add_to_foot('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
+			ee()->cp->add_to_foot('<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>');
 			ee()->cp->add_to_foot('<script type="text/javascript" src="'.ee()->config->item('url_third_themes').'mx_google_map/mxgooglemap.min.js"></script>');
 			ee()->cp->add_to_foot('<link rel="stylesheet" type="text/css" href="'.ee()->config->item('url_third_themes').'mx_google_map/css/mx_google_map.css" />');
 			$this->_insert_js('
@@ -688,7 +688,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 	 */
 
 	function GetLatLong($query, $mode){
-		$xml_url = "http://maps.google.com/maps/geo?output=xml&q=$query&ie=utf-8&oe=utf-8";
+		$xml_url = "//maps.google.com/maps/geo?output=xml&q=$query&ie=utf-8&oe=utf-8";
 
 		if (ini_get('allow_url_fopen')) {
 			$xml = @simplexml_load_file($xml_url);
@@ -853,7 +853,7 @@ class Mx_google_map_ft extends EE_Fieldtype {
 		// pages, but on the global screen the map takes up almost
 		// the entire screen. So scroll wheel zooming becomes a hindrance.
 		ee()->javascript->set_global('gmaps.scroll', ($_GET['C'] == 'content_admin'));
-		ee()->cp->add_to_foot('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
+		ee()->cp->add_to_foot('<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>');
 		ee()->cp->load_package_js('cp');
 	}
 }
